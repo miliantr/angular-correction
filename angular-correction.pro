@@ -9,7 +9,8 @@ SOURCES += \
 
 DISTFILES += \
     src/ballistics/.gitkeep \
-    utils/.gitkeep
+    utils/.gitkeep \
+    utils/.txt
 
 HEADERS += \
     src/math/linal.h
