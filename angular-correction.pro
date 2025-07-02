@@ -4,4 +4,12 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+        src/math/linal.cpp
+
+DISTFILES += \
+    src/ballistics/.gitkeep \
+    utils/.gitkeep
+
+HEADERS += \
+    src/math/linal.h
