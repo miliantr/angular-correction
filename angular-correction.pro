@@ -13,4 +13,5 @@ DISTFILES += \
     utils/.txt
 
 HEADERS += \
+    src/ballistics/const.h \
     src/math/linal.h

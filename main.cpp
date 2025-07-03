@@ -1,13 +1,14 @@
 #include "src/math/linal.h"
+#include "src/ballistics/const.h"
 
 using namespace LinearAlgebra;
 
 int main()
 {
-    TVector wind(3);
-    wind[0] = 1;
-    wind[1] = 1;
-    wind[2] = 1;
-    wind.print();
+    TVector temp(3);
+    temp[0] = Cx[1];
+    temp[1] = Cx[5];
+    temp[2] = Cx[2];
+    temp.print();
     return 0;
 }
