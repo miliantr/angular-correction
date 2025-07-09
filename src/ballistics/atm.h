@@ -17,6 +17,8 @@ public:
     float get_T(float H);   // Calc temperature
     float get_P(float H);   // Atmospheric pressure at a given altitude H
 
+    float P_to_h(float P);
+
 private:
     // Const
     float RE = 6356767.0;   // Erath radius

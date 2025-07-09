@@ -5,6 +5,10 @@ atm::atm()
 
 }
 
+float P_to_h(float P){
+    return -1;
+}
+
 float atm::get_a(float H)
 {
     return K * sqrt(get_T(H));

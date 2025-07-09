@@ -16,8 +16,10 @@ DISTFILES += \
     utils/.txt
 
 HEADERS += \
+    interpolation.h \
     src/ballistics/atm.h \
     src/ballistics/ball.h \
     src/ballistics/const.h \
     src/ballistics/erath_model.h \
+    src/math/interpolation.h \
     src/math/linal.h
