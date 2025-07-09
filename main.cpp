@@ -1,15 +1,20 @@
 #include <iostream>
 
-#include "src/math/linal.h"
-#include "src/ballistics/atm.h"
-#include "src/ballistics/const.h"
-#include "src/math/interpolation.h"
+#include "src/ballistics/ball.h"
 
-using namespace LinearAlgebra;
+//#include "src/math/linal.h"
+//#include "src/ballistics/atm.h"
+//#include "src/ballistics/const.h"
+//#include "src/math/interpolation.h"
+
+//using namespace LinearAlgebra;
 
 int main()
 {
-    std::cout << interpolate(500.0) << '\n';
+    ball ball1;
+    std::cout << ball1.get_E(840) << '\n';
+
+    //std::cout << LagranjInterpol(G7, 840.0) << '\n' << LinearInterpol(G7, 840.0);
 
     //atm atm1;
     //float H;

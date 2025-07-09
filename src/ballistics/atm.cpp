@@ -5,8 +5,14 @@ atm::atm()
 
 }
 
-float P_to_h(float P){
-    return -1;
+float atm::g(float y)
+{
+    return g_0 * pow(R_E / (R_E + y), 2);
+}
+
+float atm::P_to_h(float P)
+{
+    return (P - P_0) / (1 * GC);
 }
 
 float atm::get_a(float H)
@@ -25,9 +31,9 @@ float atm::H_to_h(float H)
     return (RE * H) / (RE + H);
 }
 
-float atm::get_g()
+float atm::get_g(float H)
 {
-    return GC;
+    return GC * pow(RE / (RE + H), 2);
 }
 
 float atm::get_P(float H)
