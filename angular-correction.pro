@@ -6,7 +6,7 @@ CONFIG -= qt
 SOURCES += \
         main.cpp \
         src/ballistics/atm.cpp \
-        src/ballistics/ballistic.cpp \
+        src/ballistics/ball.cpp \
         src/ballistics/erath_model.cpp \
         src/math/linal.cpp
 
@@ -17,7 +17,7 @@ DISTFILES += \
 
 HEADERS += \
     src/ballistics/atm.h \
-    src/ballistics/ballistic.h \
+    src/ballistics/ball.h \
     src/ballistics/const.h \
     src/ballistics/erath_model.h \
     src/math/linal.h
