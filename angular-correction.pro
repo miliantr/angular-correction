@@ -8,7 +8,6 @@ SOURCES += \
         src/ballistics/atm.cpp \
         src/ballistics/ball.cpp \
         src/ballistics/bullet_model.cpp \
-        src/ballistics/erath_model.cpp \
         src/math/linal.cpp
 
 DISTFILES += \
@@ -22,6 +21,4 @@ HEADERS += \
     src/ballistics/ball.h \
     src/ballistics/bullet_model.h \
     src/ballistics/const.h \
-    src/ballistics/erath_model.h \
-    src/math/interpolation.h \
     src/math/linal.h

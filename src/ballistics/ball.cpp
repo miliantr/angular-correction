@@ -1,18 +1,50 @@
 #include "ball.h"
 
-ball::ball()
-{
+float lagranjInterpolate(const float table[][2],float X); // fix pls
+float linearInterpolate(const float table[][2], float X);
 
+ball::ball(TVector v_, TVector u_)
+{
+    v = v_;
+    u = u_;
+    w = v + u;
 }
 
 float ball::H(float y)
 {
-    return atm1.get_ro(y) / atm1.get_ro_n0();
+    return atm1.get_ro(y) / atm1.get_ro_N0();
 }
 
-float LinearInterpol(const float table[][2], float X)
+float ball::get_E()
 {
-    const int n = 79; //sizeof(table)/sizeof(table[0]);
+    return c[0] * H(h) * (M_PI * atm1.get_ro_N0()) / 8000.0 * w[0] * linearInterpolate(G7, w[0]);
+}
+
+float ball::lagranjInterpolate(const float table[][2],float X)
+{
+    const int n = 79;
+    float L, l;
+
+    X = X / atm1.get_a(h); // Mach number
+    L = 0.0;
+
+    for (int i = 0; i < n; i++)
+    {
+        l = 1.0;
+
+        for (int j = 0; j < n; j++)
+            if(i != j)
+                l *= (X - table[j][0]) / (table[i][0] - table[j][0]);
+
+        L += table[i][1] * l;
+    }
+    //std::cout << X << ' ';
+    return L;
+}
+
+float ball::linearInterpolate(const float table[][2], float X)
+{
+    const int n = 79;
     float x_0;
     float y_0;
     float x_1;
@@ -20,7 +52,7 @@ float LinearInterpol(const float table[][2], float X)
     float k;
     float b;
 
-    X = X / 340.294; // Mach number
+    X = X / atm1.get_a(h); // Mach number
 
     if (X <= table[0][0])
         return table[0][1];
@@ -46,10 +78,4 @@ float LinearInterpol(const float table[][2], float X)
         }
 
     return -1;
-}
-
-
-float ball::get_E(float v)
-{
-    return c[0] * H(h) * (M_PI * atm1.get_ro_n0()) / 8000.0 * v * LinearInterpol(G7, v);
 }

@@ -1,5 +1,5 @@
 #define _USE_MATH_DEFINES
-const double M_PI = 3.14159265358979323846;
+
 #include <cstring>
 #include <math.h>
 #include <iostream>
@@ -8,7 +8,7 @@ const double M_PI = 3.14159265358979323846;
 
 namespace LinearAlgebra {
     // Векторы
-
+    const double M_PI = 3.14159265358979323846;
 
     // Конструктор по умолчанию
     TVector::TVector() : n(0), data(NULL) {}

@@ -1,22 +1,26 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include "src/math/linal.h"
-#include "src/ballistics/atm.h"
 #include "src/ballistics/const.h"
-//#include "src/math/interpolation.h"
+#include "src/ballistics/atm.h"
+
+using namespace LinearAlgebra;
 
 class ball
 {
 public:
-    ball();
+    ball(TVector v_, TVector u_);
     atm atm1;
-    float get_E(float v);
+    float get_E();
 
 private:
     float h = 170.0; // Средняя высота по Восточно-Европейской равнине
+    TVector v;
+    TVector u;
+    TVector w;
     float H(float y);
-    const double M_PI = 3.14159265358979323846;
+    float lagranjInterpolate(const float table[][2],float X); // fix needed
+    float linearInterpolate(const float table[][2], float X);
 };
 
 #endif // BALL_H
