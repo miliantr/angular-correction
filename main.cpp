@@ -11,7 +11,7 @@ int main()
 
     ball ball1(v, u);
 
-    std::cout << ball1.get_E() << '\n';
+    std::cout << ball1.euler(0, 800, 0.01) << '\n';
 
     return 0;
 }

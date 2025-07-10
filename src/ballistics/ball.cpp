@@ -1,12 +1,7 @@
 #include "ball.h"
 
-float lagranjInterpolate(const float table[][2],float X); // fix pls
-float linearInterpolate(const float table[][2], float X);
-
-ball::ball(TVector v_, TVector u_)
+ball::ball(TVector v, TVector u)
 {
-    v = v_;
-    u = u_;
     w = v + u;
 }
 
@@ -15,31 +10,36 @@ float ball::H(float y)
     return atm1.get_ro(y) / atm1.get_ro_N0();
 }
 
-float ball::get_E()
+float ball::get_E(float h, float v, int bullet)
 {
-    return c[0] * H(h) * (M_PI * atm1.get_ro_N0()) / 8000.0 * w[0] * linearInterpolate(G7, w[0]);
+    return c[bullet] * H(h) * (M_PI * atm1.get_ro_N0()) / 8000.0 * v * linearInterpolate(G7, v);
 }
 
-float ball::lagranjInterpolate(const float table[][2],float X)
+float ball::euler(float x0, float xf, float h)
 {
-    const int n = 79;
-    float L, l;
-
-    X = X / atm1.get_a(h); // Mach number
-    L = 0.0;
-
-    for (int i = 0; i < n; i++)
+    int c = (xf - x0) / h + 1;
+    float x = x0;
+    float y = altitude;
+    float v = w[0];
+    float U = w[0];
+    float P = 0;
+    float t = 0;
+    float nu = 0;
+    for (int i = 1; i < c; i++)
     {
-        l = 1.0;
+        U = U + h * (get_E(y, v, 1));
+        P = P + h * (atm1.get_g(y) / pow(U, 2));
+        t = t + h * 1 / U;
+        nu = nu + h * P;
 
-        for (int j = 0; j < n; j++)
-            if(i != j)
-                l *= (X - table[j][0]) / (table[i][0] - table[j][0]);
+        a_p = nu / D_y * cos(eps);
 
-        L += table[i][1] * l;
+        y = altitude + ksi * sin(eps + a_p) - nu;
+        v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(eps + a_p));
+
+        x += h;
     }
-    //std::cout << X << ' ';
-    return L;
+    return a_p;
 }
 
 float ball::linearInterpolate(const float table[][2], float X)
@@ -52,7 +52,7 @@ float ball::linearInterpolate(const float table[][2], float X)
     float k;
     float b;
 
-    X = X / atm1.get_a(h); // Mach number
+    X = X / atm1.get_a(altitude); // Mach number
 
     if (X <= table[0][0])
         return table[0][1];

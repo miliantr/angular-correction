@@ -11,16 +11,22 @@ class ball
 public:
     ball(TVector v_, TVector u_);
     atm atm1;
-    float get_E();
+
+    float euler(float x0, float xf, float h);
 
 private:
-    float h = 170.0; // Средняя высота по Восточно-Европейской равнине
-    TVector v;
-    TVector u;
+    const float altitude = 170.0; // Средняя высота по Восточно-Европейской равнине
     TVector w;
-    float H(float y);
-    float lagranjInterpolate(const float table[][2],float X); // fix needed
+
+    float eps = 30; // Угол места цели
+    float a_p = 0; // Угловая поправка
+
+    float ksi = 0;
+    float D_y = 2000;
+
     float linearInterpolate(const float table[][2], float X);
+    float H(float y);
+    float get_E(float h, float v, int bullet);
 };
 
 #endif // BALL_H
