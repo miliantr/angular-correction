@@ -7,7 +7,6 @@ SOURCES += \
         main.cpp \
         src/ballistic.cpp \
         src/model.cpp \
-        src/linal.cpp \
         src/linal.cpp
 
 DISTFILES += \
@@ -16,9 +15,7 @@ DISTFILES += \
     utils/.txt
 
 HEADERS += \
-    interpolation.h \
     src/ballistic.h \
     src/model.h \
-    src/bullet_model.h \
     src/const.h \
     src/linal.h

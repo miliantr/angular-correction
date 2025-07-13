@@ -13,12 +13,12 @@ class Ballistic
 public:
     Ballistic();
 
-    void set_cond(float distanse, float eps_, TVector v,
-                   TVector u, TVector Cord_angle, float altitude);
+    void set_cond(float distanse, float eps_, TVector V_,
+                   TVector U_, float U_speed, TVector Cord_angle, float altitude);
 
     void calc(int type);
-    void calc_a_p();
 
+    float get_a_p() { return a_p; }
     float get_U() { return U;}
     float get_P() { return P;}
     float get_t() { return t;}
@@ -39,32 +39,32 @@ private:
     // Const
     const float Rk = 20.046796; // R * k
     const float MC = 28.964420; // Molar mass of dry air
+    float ksi = 0.0; // Начало интегрирования
 
-    float alt = 0;
-    float ksi = 0;
-    float D = 0;
-    float eps = 0;
+    float alt;
+    float D;
+    float eps;
     TVector W;
     TVector CAng;
-    float U = 0;
-    float P = 0;
-    float t = 0;
-    float nu = 0;
-    float teta = 0;
-    float a_p = 0;
-    int bType = 0;
+    float U;
+    float P;
+    float t;
+    float nu;
+    float teta;
+    float a_p;
+    int bType;
     float tab[79][2];
 
     float interpolate(const float table[][2], float X, float Y);
     void integrate(float x0, float xf, float h);
 
-    float calc_E(float y, TVector veol);
     float calc_H(float y);
     float calc_T(float y);
     float calc_a(float y);
     float calc_yG(float y);
     float calc_g(float y);
     float calc_M(float veol, float altitude);
+    float calc_E(float y, TVector veol);
 };
 
 #endif // BALLISTIC_H

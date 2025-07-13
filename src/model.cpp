@@ -22,7 +22,7 @@ void Model::set_sensor(float wind_speed, TVector wind_direction,
                 float atmospheric_pressure, float rainfall)
 {
     wSpd = wind_speed;
-    wDir = wind_direction;
+    wDir = wind_direction.norm();
     hum = humidity;
     temp = temperature;
     atmPres = atmospheric_pressure;
