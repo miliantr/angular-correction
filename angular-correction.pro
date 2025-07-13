@@ -5,10 +5,10 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp \
-        src/ballistics/atm.cpp \
-        src/ballistics/ballistic.cpp \
-        src/ballistics/erath_model.cpp \
-        src/math/linal.cpp
+        src/ballistic.cpp \
+        src/model.cpp \
+        src/linal.cpp \
+        src/linal.cpp
 
 DISTFILES += \
     src/ballistics/.gitkeep \
@@ -16,8 +16,9 @@ DISTFILES += \
     utils/.txt
 
 HEADERS += \
-    src/ballistics/atm.h \
-    src/ballistics/ballistic.h \
-    src/ballistics/const.h \
-    src/ballistics/erath_model.h \
-    src/math/linal.h
+    interpolation.h \
+    src/ballistic.h \
+    src/model.h \
+    src/bullet_model.h \
+    src/const.h \
+    src/linal.h
