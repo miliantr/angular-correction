@@ -14,8 +14,8 @@ int main()
     model.set_sensor(3.0, wd, 10.0, 10.0, 100000.0, 2.0);
 
     TVector tc(3);
-    tc[0] = 5000.0;
-    tc[1] = 190.0;
+    tc[0] = 2000.0;
+    tc[1] = 500.0;
     tc[2] = 30.0;
     model.set_target(tc);
 
@@ -43,6 +43,7 @@ int main()
                   v01, model.get_wind_direction(), model.get_wind_speed(),
                   model.get_Cord_ang(), model.get_machine()[1]);
     ball.calc(1);
-    std::cout << "Angular corr: " << ball.get_a_p() << '\n';
+    std::cout << "a_p: " << ball.get_a_p() << '\n';
+
     return 0;
 }

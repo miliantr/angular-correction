@@ -33,7 +33,7 @@ void Ballistic::calc(int type)
         case 5:  equating(tab, G1); break;
         case 6:  equating(tab, G7); break;
     }
-    integrate(ksi, D, 0.001);
+    integrate(ksi, D, 0.01);
     std::cout << "U: " << get_U() << '\n';
     std::cout << "P: " << get_P() << '\n';
     std::cout << "t: " << get_t() << '\n';
@@ -41,10 +41,10 @@ void Ballistic::calc(int type)
     return;
 }
 
-float Ballistic::calc_E(float y, TVector veol)
+float Ballistic::calc_E(float y, float veol)
 {
     return c[bType] * M_PI * ro_N0 / 8000.0 * calc_H(y)
-            * veol[0] * interpolate(tab, veol[0], calc_yG(y));
+            * veol * interpolate(tab, veol, calc_yG(y));
 }
 
 float Ballistic::calc_H(float y)
@@ -121,7 +121,7 @@ void Ballistic::integrate(float x0, float xf, float h)
         t += (k1_t + 2*k2_t + 2*k3_t + k4_t) / 6;
         nu += (k1_nu + 2*k2_nu + 2*k3_nu + k4_nu) / 6;
 
-        a_p = nu / D * cos(eps);
+        a_p = asin(nu / D * cos(eps));
         y = alt + ksi * sin(eps + a_p) - nu;
         v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(eps + a_p));
 

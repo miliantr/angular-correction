@@ -64,7 +64,7 @@ private:
     float calc_yG(float y);
     float calc_g(float y);
     float calc_M(float veol, float altitude);
-    float calc_E(float y, TVector veol);
+    float calc_E(float y, float veol);
 };
 
 #endif // BALLISTIC_H
