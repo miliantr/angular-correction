@@ -43,6 +43,7 @@ int main()
                   v01, model.get_wind_direction(), model.get_wind_speed(),
                   model.get_Cord_ang(), model.get_machine()[1]);
     ball.calc(1);
+
     std::cout << "a_p: " << ball.get_a_p() << '\n';
 
     return 0;

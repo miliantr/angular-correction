@@ -1,7 +1,7 @@
 #include "ballistic.h"
 
-#include <iostream>
-#include <fstream>
+//#include <iostream>
+//#include <fstream>
 
 Ballistic::Ballistic()
 {
@@ -34,11 +34,11 @@ void Ballistic::calc(int type)
         case 5:  equating(tab, G1); break;
         case 6:  equating(tab, G7); break;
     }
-    integrate(ksi, D, 0.01); // 0.001
-    std::cout << "U: " << get_U() << '\n';
-    std::cout << "P: " << get_P() << '\n';
-    std::cout << "t: " << get_t() << '\n';
-    std::cout << "nu: " << get_nu() << '\n';
+    integrate(ksi, D, 0.001);
+    //std::cout << "U: " << get_U() << '\n';
+    //std::cout << "P: " << get_P() << '\n';
+    //std::cout << "t: " << get_t() << '\n';
+    //std::cout << "nu: " << get_nu() << '\n';
     return;
 }
 
@@ -90,8 +90,8 @@ void Ballistic::integrate(float x0, float xf, float h)
     t = 0;
     nu = 0;
 
-    std::ofstream fout("out.txt");
-    fout << 'x' << ';' << 'U' << ';' << 'P' << ';' << 't' << ';' << "nu" << '\n';
+    //std::ofstream fout("out.txt");
+    //fout << 'x' << ';' << 'U' << ';' << 'P' << ';' << 't' << ';' << "nu" << '\n';
     for (int i = ksi; i < c; i++)
     {
         auto dUdt = [this, y, v]() { return -calc_E(y, v); };
@@ -124,14 +124,14 @@ void Ballistic::integrate(float x0, float xf, float h)
         t += (k1_t + 2 * k2_t + 2 * k3_t + k4_t) / 6;
         nu += (k1_nu + 2 * k2_nu + 2 * k3_nu + k4_nu) / 6;
 
-        a_p = asin(nu / D * cos(eps));
+        a_p = nu / D * cos(eps);
         teta = a_p + eps;
         y = alt + ksi * sin(teta) - nu;
         v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(teta));
-        fout << x << ';' << U << ';' << P << ';' << t << ';' << nu << '\n';
+        //fout << x << ';' << U << ';' << P << ';' << t << ';' << nu << '\n';
         x += h;
     }
-    fout.close();
+    //fout.close();
     return;
 }
 
