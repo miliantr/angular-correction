@@ -1,5 +1,8 @@
 #include "ballistic.h"
 
+//#include <iostream>
+//#include <fstream>
+
 Ballistic::Ballistic()
 {
 
@@ -7,10 +10,10 @@ Ballistic::Ballistic()
 
 void equating(float a[][2], const float b[][2]);
 
-void Ballistic::set_cond(float distanse, float eps_, TVector V,
-               TVector U, TVector Cord_angle, float altitude)
+void Ballistic::set_cond(float distanse, float eps_, TVector V_,
+               TVector U_, float U_speed, TVector Cord_angle, float altitude)
 {
-    W = V + U;
+    W = V_ + U_ * U_speed;
     D = distanse;
     eps = eps_;
     CAng = Cord_angle;
@@ -31,19 +34,18 @@ void Ballistic::calc(int type)
         case 5:  equating(tab, G1); break;
         case 6:  equating(tab, G7); break;
     }
-    integrate(ksi, D, 1);
+    integrate(ksi, D, 0.001);
+    //std::cout << "U: " << get_U() << '\n';
+    //std::cout << "P: " << get_P() << '\n';
+    //std::cout << "t: " << get_t() << '\n';
+    //std::cout << "nu: " << get_nu() << '\n';
     return;
 }
 
-void Ballistic::calc_a_p()
+float Ballistic::calc_E(float y, float veol)
 {
-    a_p = asin(nu / D * cos(eps));
-}
-
-float Ballistic::calc_E(float y, TVector veol)
-{
-    return c[bType] * calc_H(y) * M_PI * ro_N0 / 8000.0
-            * veol[0] * interpolate(tab, veol[0], calc_yG(y));
+    return c[bType] * M_PI * ro_N0 / 8000.0 * calc_H(y)
+            * veol * interpolate(tab, veol, calc_yG(y));
 }
 
 float Ballistic::calc_H(float y)
@@ -63,7 +65,7 @@ float Ballistic::calc_a(float y)
 
 float Ballistic::calc_yG(float y)
 {
-    return (R_E * y) / (R_E + y);
+    return y * R_E / (R_E + y);
 }
 
 float Ballistic::calc_g(float y)
@@ -88,20 +90,48 @@ void Ballistic::integrate(float x0, float xf, float h)
     t = 0;
     nu = 0;
 
-    for (int i = 1; i < c; i++)
+    //std::ofstream fout("out.txt");
+    //fout << 'x' << ';' << 'U' << ';' << 'P' << ';' << 't' << ';' << "nu" << '\n';
+    for (int i = ksi; i < c; i++)
     {
-        U = U + h * (calc_E(y, v));
-        P = P + h * (calc_g(y) / pow(U, 2));
-        t = t + h * 1 / U;
-        nu = nu + h * P;
+        auto dUdt = [this, y, v]() { return -calc_E(y, v); };
+        auto dPdt = [this](float U_val) { return g_0 / pow(U_val, 2); };
+        auto dtdt = [](float U_val) { return 1 / U_val; };
+        auto dnudt = [](float P_val) { return P_val; };
+
+        float k1_U = h * dUdt();
+        float k1_P = h * dPdt(U);
+        float k1_t = h * dtdt(U);
+        float k1_nu = h * dnudt(P);
+
+        float k2_U = h * dUdt();
+        float k2_P = h * dPdt(U + k1_U / 2);
+        float k2_t = h * dtdt(U + k1_U / 2);
+        float k2_nu = h * dnudt(P + k1_P / 2);
+
+        float k3_U = h * dUdt();
+        float k3_P = h * dPdt(U + k2_U / 2);
+        float k3_t = h * dtdt(U + k2_U / 2);
+        float k3_nu = h * dnudt(P + k2_P / 2);
+
+        float k4_U = h * dUdt();
+        float k4_P = h * dPdt(U + k3_U);
+        float k4_t = h * dtdt(U + k3_U);
+        float k4_nu = h * dnudt(P + k3_P);
+
+        U += (k1_U + 2 * k2_U + 2 * k3_U + k4_U) / 6;
+        P += (k1_P + 2 * k2_P + 2 * k3_P + k4_P) / 6;
+        t += (k1_t + 2 * k2_t + 2 * k3_t + k4_t) / 6;
+        nu += (k1_nu + 2 * k2_nu + 2 * k3_nu + k4_nu) / 6;
 
         a_p = nu / D * cos(eps);
-
-        y = alt + ksi * sin(eps + a_p) - nu;
-        //v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(eps + a_p));
-
+        teta = a_p + eps;
+        y = alt + ksi * sin(teta) - nu;
+        v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(teta));
+        //fout << x << ';' << U << ';' << P << ';' << t << ';' << nu << '\n';
         x += h;
     }
+    //fout.close();
     return;
 }
 
