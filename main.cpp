@@ -14,7 +14,7 @@ int main()
     model.set_sensor(3.0, wd, 10.0, 10.0, 100000.0, 2.0);
 
     TVector tc(3);
-    tc[0] = 2000.0;
+    tc[0] = 4000.0;
     tc[1] = 500.0;
     tc[2] = 30.0;
     model.set_target(tc);

@@ -39,7 +39,7 @@ private:
     // Const
     const float Rk = 20.046796; // R * k
     const float MC = 28.964420; // Molar mass of dry air
-    float ksi = 0.0; // Начало интегрирования
+    float ksi = 0.0;
 
     float alt;
     float D;

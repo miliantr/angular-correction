@@ -1,6 +1,7 @@
 #include "ballistic.h"
 
 #include <iostream>
+#include <fstream>
 
 Ballistic::Ballistic()
 {
@@ -33,7 +34,7 @@ void Ballistic::calc(int type)
         case 5:  equating(tab, G1); break;
         case 6:  equating(tab, G7); break;
     }
-    integrate(ksi, D, 0.01);
+    integrate(ksi, D, 0.01); // 0.001
     std::cout << "U: " << get_U() << '\n';
     std::cout << "P: " << get_P() << '\n';
     std::cout << "t: " << get_t() << '\n';
@@ -89,6 +90,8 @@ void Ballistic::integrate(float x0, float xf, float h)
     t = 0;
     nu = 0;
 
+    std::ofstream fout("out.txt");
+    fout << 'x' << ';' << 'U' << ';' << 'P' << ';' << 't' << ';' << "nu" << '\n';
     for (int i = ksi; i < c; i++)
     {
         auto dUdt = [this, y, v]() { return -calc_E(y, v); };
@@ -102,31 +105,33 @@ void Ballistic::integrate(float x0, float xf, float h)
         float k1_nu = h * dnudt(P);
 
         float k2_U = h * dUdt();
-        float k2_P = h * dPdt(U + k1_U/2);
-        float k2_t = h * dtdt(U + k1_U/2);
-        float k2_nu = h * dnudt(P + k1_P/2);
+        float k2_P = h * dPdt(U + k1_U / 2);
+        float k2_t = h * dtdt(U + k1_U / 2);
+        float k2_nu = h * dnudt(P + k1_P / 2);
 
         float k3_U = h * dUdt();
-        float k3_P = h * dPdt(U + k2_U/2);
-        float k3_t = h * dtdt(U + k2_U/2);
-        float k3_nu = h * dnudt(P + k2_P/2);
+        float k3_P = h * dPdt(U + k2_U / 2);
+        float k3_t = h * dtdt(U + k2_U / 2);
+        float k3_nu = h * dnudt(P + k2_P / 2);
 
         float k4_U = h * dUdt();
         float k4_P = h * dPdt(U + k3_U);
         float k4_t = h * dtdt(U + k3_U);
         float k4_nu = h * dnudt(P + k3_P);
 
-        U += (k1_U + 2*k2_U + 2*k3_U + k4_U) / 6;
-        P += (k1_P + 2*k2_P + 2*k3_P + k4_P) / 6;
-        t += (k1_t + 2*k2_t + 2*k3_t + k4_t) / 6;
-        nu += (k1_nu + 2*k2_nu + 2*k3_nu + k4_nu) / 6;
+        U += (k1_U + 2 * k2_U + 2 * k3_U + k4_U) / 6;
+        P += (k1_P + 2 * k2_P + 2 * k3_P + k4_P) / 6;
+        t += (k1_t + 2 * k2_t + 2 * k3_t + k4_t) / 6;
+        nu += (k1_nu + 2 * k2_nu + 2 * k3_nu + k4_nu) / 6;
 
         a_p = asin(nu / D * cos(eps));
-        y = alt + ksi * sin(eps + a_p) - nu;
-        v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(eps + a_p));
-
+        teta = a_p + eps;
+        y = alt + ksi * sin(teta) - nu;
+        v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(teta));
+        fout << x << ';' << U << ';' << P << ';' << t << ';' << nu << '\n';
         x += h;
     }
+    fout.close();
     return;
 }
 
