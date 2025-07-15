@@ -6,12 +6,13 @@
 //-----------------------------------------------------------------------
 
 #include "ballistic.h"
-//#include <iostream>
-//#include <fstream>
+
 
 //-----------------------------------------------------------------------
 
-#define bullet_velocity 850.0
+#define bullet_velocity float(850.0)
+#define bullet_mass float(135.0)
+#define bullet_kalibr float(12.7)
 
 //-----------------------------------------------------------------------
 
@@ -66,10 +67,6 @@ void Ballistic::calc(int type)
         case 6:  equating(tab, G7); break;
     }
     integrate(ksi, D, 0.001);
-    //std::cout << "U: " << get_U() << '\n';
-    //std::cout << "P: " << get_P() << '\n';
-    //std::cout << "t: " << get_t() << '\n';
-    //std::cout << "nu: " << get_nu() << '\n';
     return;
 }
 
@@ -153,8 +150,6 @@ void Ballistic::integrate(float x0, float xf, float h)
     t = 0;
     nu = 0;
 
-    //std::ofstream fout("out.txt");
-    //fout << 'x' << ';' << 'U' << ';' << 'P' << ';' << 't' << ';' << "nu" << '\n';
     for (int i = ksi; i < c; i++)
     {
         auto dUdt = [this, y, v]() { return -calc_E(y, v); };
@@ -192,11 +187,10 @@ void Ballistic::integrate(float x0, float xf, float h)
         y = alt + ksi * sin(D2R(teta)) - nu;
         v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(D2R(teta)));
         derivation = clac_der(v, t);
-        //fout << x << ';' << U << ';' << P << ';' << t << ';' << nu << '\n';
+
         x += h;
     }
-    psi = derivation + atan2(t * W[1], D);
-    //fout.close();
+    psi = atan2(derivation + t * W[1], D);
     return;
 }
 
@@ -256,7 +250,7 @@ float Ballistic::calc_om(float veol)
 //-----------------------------------------------------------------------
 float Ballistic::clac_magnus(float veol)
 {
-    return 1 / 2 * ro_N0 * pow(veol, 2) * M_PI * pow(12.7, 2) / 4 * calc_om(veol);
+    return 1 / 2 * ro_N0 * pow(veol, 2) * M_PI * pow(bullet_kalibr, 2) / 4 * calc_om(veol);
 }
 
 //-----------------------------------------------------------------------
@@ -265,7 +259,7 @@ float Ballistic::clac_magnus(float veol)
 //-----------------------------------------------------------------------
 float Ballistic::clac_der(float veol, float time)
 {
-    return 1 / 2 * clac_magnus(veol) / 135.0 * pow(time, 2);
+    return 1 / 2 * clac_magnus(veol) / bullet_mass * pow(time, 2);
 }
 
 void equating(float a[][2], const float b[][2])
