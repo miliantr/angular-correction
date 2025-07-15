@@ -13,7 +13,7 @@ class Ballistic
 public:
     Ballistic();
 
-    void set_cond(float distanse, float eps_, TVector U_,
+    void set_cond(float distanse, float eps_, float U_,
                   float U_speed, float altitude);
 
     void calc(int type);
@@ -44,7 +44,6 @@ private:
     //const float MC = 28.964420; // Molar mass of dry air
 
     float ksi = 0.0;
-    TVector V01; // Начальная скорость стрельбы
 
     float alt; // Высота начала стрельбы
     float D; // Дальность стрельбы

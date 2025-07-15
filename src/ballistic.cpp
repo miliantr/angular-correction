@@ -15,15 +15,18 @@ void equating(float a[][2], const float b[][2]);
 
 //-----------------------------------------------------------------------
 // Задает начальные условия
-// set_cond(дистанция до цели, угол места цели, вектор скорсти ветра, скорость ветра, высота)
+// set_cond(дистанция до цели, угол места цели, направление ветра, скорость ветра, высота начала стерьбы)
 //-----------------------------------------------------------------------
 void Ballistic::set_cond(float distanse, float eps_,
-                         TVector U_, float U_speed, float altitude)
+                         float U_, float U_speed, float altitude)
 {
-    U_ = U_.norm();
-    V01.resize(3);
+    TVector U_vec(2);
+    U_vec[0] = cos(D2R(U_));
+    U_vec[1] = sin(D2R(U_));
+    TVector V01(2); // Начальная скорость стрельбы
     V01[0] = 850.0;
-    W = V01 + U_ * U_speed;
+    V01[1] = 0.0;
+    W = V01 + U_vec * U_speed;
     D = distanse;
     eps = eps_;
     alt = altitude;
@@ -31,7 +34,7 @@ void Ballistic::set_cond(float distanse, float eps_,
 
 //-----------------------------------------------------------------------
 // Вычисление баллистических элементов
-// calc(тип пули)
+// calc(тип снаряда)
 // см с[] в const.h
 //-----------------------------------------------------------------------
 void Ballistic::calc(int type)
@@ -170,10 +173,10 @@ void Ballistic::integrate(float x0, float xf, float h)
         t += (k1_t + 2 * k2_t + 2 * k3_t + k4_t) / 6;
         nu += (k1_nu + 2 * k2_nu + 2 * k3_nu + k4_nu) / 6;
 
-        a_p = nu / D * cos(eps);
+        a_p = nu / D * cos(D2R(eps));
         teta = a_p + eps;
-        y = alt + ksi * sin(teta) - nu;
-        v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(teta));
+        y = alt + ksi * sin(D2R(teta)) - nu;
+        v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(D2R(teta)));
         //fout << x << ';' << U << ';' << P << ';' << t << ';' << nu << '\n';
         x += h;
     }

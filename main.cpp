@@ -7,11 +7,9 @@ int main()
 {
     Model model;
 
-    TVector wd(2);
-    wd[0] = 1.0;
-    wd[1] = 1.0;
-
-    model.set_sensor(3.0, wd, 10.0, 10.0, 100000.0, 2.0);
+    float wd = 45.0; // Направление ветра в градусах
+    float ws = 3.0; // Скорость ветра
+    model.set_sensor(ws, wd, 10.0, 300.0, 100000.0, 2.0);
 
     TVector tc(3);
     tc[0] = 4000.0;
@@ -30,7 +28,7 @@ int main()
     Ballistic ball;
 
     ball.set_cond(model.get_distance(), model.get_eps(),
-                  model.get_wind_direction(), model.get_wind_speed(),
+                  wd, model.get_wind_speed(),
                   model.get_machine()[1]);
     ball.calc(1);
 

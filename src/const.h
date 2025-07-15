@@ -1,6 +1,8 @@
 #ifndef CONST_H
 #define CONST_H
 
+#define D2R(deg) deg * M_PI / 180
+
 const double M_PI = 3.14159265358979323846;
 
 // Баллистический коэффициент пули

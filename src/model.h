@@ -4,6 +4,7 @@
 #include <math.h>
 
 #include "src/linal.h"
+#include "src/const.h"
 
 using namespace LinearAlgebra;
 
@@ -14,7 +15,7 @@ public:
 
     void set_target(TVector coord);
     void set_machine(TVector coord);
-    void set_sensor(float wind_speed, TVector wind_direction,
+    void set_sensor(float wind_speed, float wind_direction,
                     float humidity, float temperature,
                     float atmospheric_pressure, float rainfall);
     void set_Cord_ang(TVector ang);
