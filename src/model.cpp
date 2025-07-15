@@ -17,12 +17,14 @@ void Model::set_machine(TVector coord)
     return;
 }
 
-void Model::set_sensor(float wind_speed, TVector wind_direction,
+void Model::set_sensor(float wind_speed, float wind_direction,
                 float humidity, float temperature,
                 float atmospheric_pressure, float rainfall)
 {
+    wDir.resize(2);
     wSpd = wind_speed;
-    wDir = wind_direction.norm();
+    wDir[0] = cos(D2R(wind_direction));
+    wDir[1] = sin(D2R(wind_direction));
     hum = humidity;
     temp = temperature;
     atmPres = atmospheric_pressure;
