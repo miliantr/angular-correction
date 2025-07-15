@@ -26,6 +26,7 @@ public:
     float get_P() { return P;}
     float get_t() { return t;}
     float get_nu() { return nu;}
+    float get_omega() {return om; }
 
 private:
     // Основыные характеристики СА-81
@@ -45,6 +46,8 @@ private:
 
     float ksi = 0.0;
 
+    float om; // Угловая скорость вращения пули
+    float reziba = 0.254; // Шаг нарезов
     float alt; // Высота начала стрельбы
     float D; // Дальность стрельбы
     float eps; // Угол места цели
@@ -59,6 +62,7 @@ private:
     float a_p; // Уголовая поправка
     int bType; // Тип снаряда
     float tab[79][2]; // Мат. таблица сопротивления
+    float derivation;
 
     float interpolate(const float table[][2], float X, float Y);
     void integrate(float x0, float xf, float h);
@@ -70,6 +74,9 @@ private:
     float calc_g(float y);
     float calc_M(float veol, float altitude);
     float calc_E(float y, float veol);
+    float calc_om(float veol);
+    float clac_magnus(float veol);
+    float clac_der(float veol, float time);
 };
 
 #endif // BALLISTIC_H

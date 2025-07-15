@@ -177,10 +177,11 @@ void Ballistic::integrate(float x0, float xf, float h)
         teta = a_p + eps;
         y = alt + ksi * sin(D2R(teta)) - nu;
         v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(D2R(teta)));
+        derivation = clac_der(v, t);
         //fout << x << ';' << U << ';' << P << ';' << t << ';' << nu << '\n';
         x += h;
     }
-    psi = atan2(t * W[1], D);
+    psi = derivation + atan2(t * W[1], D);
     //fout.close();
     return;
 }
@@ -224,6 +225,33 @@ float Ballistic::interpolate(const float table[][2], float X, float Y)
         }
 
     return -1;
+}
+
+//-----------------------------------------------------------------------
+// Рассчет угловой скорости
+// integrate(скорость)
+//-----------------------------------------------------------------------
+float Ballistic::calc_om(float veol)
+{
+    return 2 * M_PI * veol / reziba;
+}
+
+//-----------------------------------------------------------------------
+// Рассчет силы Магнуса
+// integrate(скорость)
+//-----------------------------------------------------------------------
+float Ballistic::clac_magnus(float veol)
+{
+    return 1 / 2 * ro_N0 * pow(veol, 2) * M_PI * pow(12.7, 2) / 4 * calc_om(veol);
+}
+
+//-----------------------------------------------------------------------
+// Боковое отклонение за время полёта t
+// clac_der(скорость, время полета)
+//-----------------------------------------------------------------------
+float Ballistic::clac_der(float veol, float time)
+{
+    return 1 / 2 * clac_magnus(veol) / 135.0 * pow(time, 2);
 }
 
 void equating(float a[][2], const float b[][2])
