@@ -58,12 +58,12 @@ void Model::calc_dist()
 
 void Model::calc_eps()
 {
-    eps = atan2(pow(tCrd[1] - mCrd[1], 2), pow(tCrd[0] - mCrd[0], 2));
+    eps = atan2(pow(tCrd[1] - mCrd[1], 2), pow(tCrd[0] - mCrd[0], 2)) * 180 / M_PI;
     return;
 }
 
 void Model::calc_psi()
 {
-    psi = atan2(pow(tCrd[2] - mCrd[2], 2), pow(tCrd[0] - mCrd[0], 2));
+    psi = atan2(pow(tCrd[2] - mCrd[2], 2), pow(tCrd[0] - mCrd[0], 2)) * 180 / M_PI;
     return;
 }
