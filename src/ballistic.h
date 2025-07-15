@@ -1,3 +1,10 @@
+//-----------------------------------------------------------------------
+//  Source      : ballistic.h
+//  Created     : 03.07.2025
+//  Modified    : 15.07.2025
+//  Author      : MD Vladislav
+//-----------------------------------------------------------------------
+
 #ifndef BALLISTIC_H
 #define BALLISTIC_H
 
@@ -6,27 +13,32 @@
 #include "src/linal.h"
 #include "src/const.h"
 
+//-----------------------------------------------------------------------
+
 using namespace LinearAlgebra;
+
+//-----------------------------------------------------------------------
 
 class Ballistic
 {
 public:
     Ballistic();
 
+    // Начальные условия
     void set_cond(float distanse, float eps_, float U_,
                   float U_speed, float altitude);
 
+    // Вычисление баллистических элементов
     void calc(int type);
 
+    // Геттер угловой поправки (угол между линией стрельбы и линией визирования) [рад]
     float get_a_p() { return a_p; }
-    float get_psi() { return psi; }
-    float get_teta() { return teta; }
 
-    float get_U() { return U;}
-    float get_P() { return P;}
-    float get_t() { return t;}
-    float get_nu() { return nu;}
-    float get_omega() {return om; }
+    // Геттер угла по 0Y (угол между линией стрельбы и относом за счет ветра и деривации) [рад]
+    float get_psi() { return psi; }
+
+    // Геттер угал бросания (угол между горизонтом и линией стрельбы) [рад]
+    float get_teta() { return teta; }
 
 private:
     // Основыные характеристики СА-81
@@ -51,15 +63,15 @@ private:
     float alt; // Высота начала стрельбы
     float D; // Дальность стрельбы
     float eps; // Угол места цели
-    float psi; // Угол по 0Y
+    float psi; // Угол по 0Y (угол между линией стрельбы и относом за счет ветра и деривации)
     TVector W; // Путевая скорость снаярда
     TVector CAng;
     float U;
     float P;
-    float t;
+    float t; // Время полета снаряда
     float nu; // Понижение снаряда
-    float teta; // Угол бросания
-    float a_p; // Уголовая поправка
+    float teta; // Угол бросания (угол между горизонтом и линией стрельбы)
+    float a_p; // Угловая поправка (угол между линией стрельбы и линией визирования)
     int bType; // Тип снаряда
     float tab[79][2]; // Мат. таблица сопротивления
     float derivation;
@@ -77,6 +89,13 @@ private:
     float calc_om(float veol);
     float clac_magnus(float veol);
     float clac_der(float veol, float time);
+    float get_omega() {return om; }
+
+    // Геттеры баллистических характеристик снаряда
+    float get_U() { return U;}
+    float get_P() { return P;}
+    float get_t() { return t;}
+    float get_nu() { return nu;}
 };
 
 #endif // BALLISTIC_H
