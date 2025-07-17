@@ -13,14 +13,14 @@ int main()
 
     TVector tc(3);
     tc[0] = 4000.0;
-    tc[1] = 500.0;
-    tc[2] = 30.0;
+    tc[1] = 0.0;
+    tc[2] = 0.0;
     model.set_target(tc);
 
     TVector mc(3);
-    mc[0] = 10.0;
-    mc[1] = 170.0;
-    mc[2] = 20.0;
+    mc[0] = 0.0;
+    mc[1] = 0.0;
+    mc[2] = 0.0;
     model.set_machine(mc);
 
     model.calc();
