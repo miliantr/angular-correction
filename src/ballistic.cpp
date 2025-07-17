@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 //  Source      : ballistic.cpp
 //  Created     : 03.07.2025
-//  Modified    : 15.07.2025
+//  Modified    : 17.07.2025
 //  Author      : MD Vladislav
 //-----------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ void equating(float a[][2], const float b[][2]);
 void Ballistic::set_cond(float distanse, float eps_,
                          float U_, float U_speed, float altitude)
 {
-    TVector U_vec(2);
+    TVector U_vec(2); // Направление ветра
     U_vec[0] = cos(D2R(U_));
     U_vec[1] = sin(D2R(U_));
     TVector V01(2); // Начальная скорость стрельбы
@@ -48,7 +48,7 @@ void Ballistic::set_cond(float distanse, float eps_,
 
 //-----------------------------------------------------------------------
 // Вычисление баллистических элементов
-// calc(тип снаряда)
+// calc(тип пули)
 // см с[] в const.h
 //-----------------------------------------------------------------------
 void Ballistic::calc(int type)
@@ -65,7 +65,7 @@ void Ballistic::calc(int type)
         case 5:  equating(tab, G1); break;
         case 6:  equating(tab, G7); break;
     }
-    integrate(ksi, D, 0.001);
+    integrate(D, 0.0005);
     return;
 }
 
@@ -135,21 +135,20 @@ float Ballistic::calc_M(float veol, float altitude)
 
 //-----------------------------------------------------------------------
 // Интегратор Рунге — Кутты 4го порядка
-// integrate(начало, конец, шаг)
+// integrate(дальность до цели, шаг)
 //-----------------------------------------------------------------------
-void Ballistic::integrate(float x0, float xf, float h)
+void Ballistic::integrate(float xf, float h)
 {
-    int c = (xf - x0) / h + 1;
-    float x = x0;
+    int c = xf / h + 1;
+    float ksi = 0.0;
+    float U = W[0];
+    float P = 0;
+    float t = 0;
+    float nu = 0;
     float y = alt;
-    float v = W[0];
+    float v = U;
 
-    U = W[0];
-    P = 0;
-    t = 0;
-    nu = 0;
-
-    for (int i = ksi; i < c; i++)
+    for (int i = 0; i < c; i++)
     {
         auto dUdt = [this, y, v]() { return -calc_E(y, v); };
         auto dPdt = [this](float U_val) { return g_0 / pow(U_val, 2); };
@@ -181,13 +180,16 @@ void Ballistic::integrate(float x0, float xf, float h)
         t += (k1_t + 2 * k2_t + 2 * k3_t + k4_t) / 6;
         nu += (k1_nu + 2 * k2_nu + 2 * k3_nu + k4_nu) / 6;
 
-        a_p = nu / D * cos(D2R(eps));
+        a_p = asin(nu / D * cos(D2R(eps)));
+        //a_p = asin(nu / D * cos(D2R(90 - teta)));
         teta = a_p + eps;
+
         y = alt + ksi * sin(D2R(teta)) - nu;
         v = U * sqrt(1 + pow(P, 2) - 2 * P * sin(D2R(teta)));
+
         derivation = clac_der(v, t);
 
-        x += h;
+        ksi += h;
     }
     psi = atan2(derivation + t * W[1], D);
     return;
