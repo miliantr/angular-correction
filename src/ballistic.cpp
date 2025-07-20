@@ -1,12 +1,11 @@
 //-----------------------------------------------------------------------
 //  Source      : ballistic.cpp
 //  Created     : 03.07.2025
-//  Modified    : 17.07.2025
+//  Modified    : 20.07.2025
 //  Author      : MD Vladislav
 //-----------------------------------------------------------------------
 
 #include "ballistic.h"
-#include <fstream>
 
 //-----------------------------------------------------------------------
 
@@ -30,7 +29,7 @@ void equating(float a[][2], const float b[][2]);
 // Задает начальные условия
 // set_cond(дистанция до цели [м], угол места цели [град],
 //          направление ветра (относительно Корд) [град. (-180.0...+180.0)],
-//          скорость ветра [м/с], высота начала стерьбы [м])
+//          скорость ветра [м/с], высота начала стрельбы [м])
 //-----------------------------------------------------------------------
 void Ballistic::set_cond(float distanse, float eps_,
                          float U_, float U_speed, float altitude)
@@ -58,13 +57,13 @@ void Ballistic::calc(int type)
     switch(bType)
     {
         default: equating(tab, G7); break;
-        case 0:  equating(tab, G7); break;
-        case 1:  equating(tab, G7); break;
-        case 2:  equating(tab, G1); break;
-        case 3:  equating(tab, G7); break;
-        case 4:  equating(tab, G7); break;
-        case 5:  equating(tab, G1); break;
-        case 6:  equating(tab, G7); break;
+        case (0):  equating(tab, G7); break;
+        case (1):  equating(tab, G7); break;
+        case (2):  equating(tab, G1); break;
+        case (3):  equating(tab, G7); break;
+        case (4):  equating(tab, G7); break;
+        case (5):  equating(tab, G1); break;
+        case (6):  equating(tab, G7); break;
     }
     integrate(D, 0.001);
     return;
@@ -149,8 +148,6 @@ void Ballistic::integrate(float xf, float h)
     float y = alt;
     float v = U;
 
-    std::ofstream fout("out.txt");
-    fout << "x;" << "U;" << "P;" << "t;" << "nu" << std::endl;
     for (int i = 0; i < c; i++)
     {
         auto dUdt = [this, y, v]() { return -calc_E(y, v); };
@@ -192,12 +189,9 @@ void Ballistic::integrate(float xf, float h)
 
         derivation = clac_der(v, t);
 
-        fout << ksi << ";" << U << ";" << P << ";" << t << ";" << nu << std::endl;
-
         ksi += h;
     }
     psi = atan2(derivation + t * W[1], D);
-    fout.close();
     return;
 }
 
@@ -206,10 +200,9 @@ void Ballistic::integrate(float xf, float h)
 //-----------------------------------------------------------------------
 float Ballistic::interpolate(const float table[][2], float X, float Y)
 {
-    int n = 79;
-    if (G1 == table)
-        n = 74;
-
+    int n = 74;
+    //if (G7 == table)
+    //    n = 79;
     float x_0;
     float y_0;
     float x_1;
@@ -274,7 +267,10 @@ float Ballistic::clac_der(float veol, float time)
 
 void equating(float a[][2], const float b[][2])
 {
-    for(int i = 0; i < 79; i++)
+    int n = 74;
+    //if (G7 == b)
+    //    n = 79;
+    for(int i = 0; i < n; i++)
     {
         a[i][0] = b[i][0];
         a[i][1] = b[i][1];
