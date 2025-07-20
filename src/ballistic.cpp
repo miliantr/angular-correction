@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 #include "ballistic.h"
+#include <fstream>
 
 //-----------------------------------------------------------------------
 
@@ -65,7 +66,7 @@ void Ballistic::calc(int type)
         case 5:  equating(tab, G1); break;
         case 6:  equating(tab, G7); break;
     }
-    integrate(D, 0.0005);
+    integrate(D, 0.001);
     return;
 }
 
@@ -148,6 +149,8 @@ void Ballistic::integrate(float xf, float h)
     float y = alt;
     float v = U;
 
+    std::ofstream fout("out.txt");
+    fout << "x;" << "U;" << "P;" << "t;" << "nu" << std::endl;
     for (int i = 0; i < c; i++)
     {
         auto dUdt = [this, y, v]() { return -calc_E(y, v); };
@@ -189,9 +192,12 @@ void Ballistic::integrate(float xf, float h)
 
         derivation = clac_der(v, t);
 
+        fout << ksi << ";" << U << ";" << P << ";" << t << ";" << nu << std::endl;
+
         ksi += h;
     }
     psi = atan2(derivation + t * W[1], D);
+    fout.close();
     return;
 }
 
@@ -200,7 +206,10 @@ void Ballistic::integrate(float xf, float h)
 //-----------------------------------------------------------------------
 float Ballistic::interpolate(const float table[][2], float X, float Y)
 {
-    const int n = 79;
+    int n = 79;
+    if (G1 == table)
+        n = 74;
+
     float x_0;
     float y_0;
     float x_1;
@@ -212,8 +221,8 @@ float Ballistic::interpolate(const float table[][2], float X, float Y)
 
     if (X <= table[0][0])
         return table[0][1];
-    else if (X >= table[78][0])
-        return table[78][1];
+    else if (X >= table[n - 1][0])
+        return table[n - 1][1];
 
     for (int i = 0; i < n - 1; i++)
         if (X == table[i][0])
