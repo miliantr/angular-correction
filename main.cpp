@@ -9,17 +9,17 @@ int main()
 
     float wd = 45.0; // Направление ветра в градусах
     float ws = 3.0; // Скорость ветра
-    model.set_sensor(ws, wd, 10.0, 300.0, 100000.0, 2.0);
+    model.set_sensor(ws, wd, 10.0, 300.0, 120000.0, 2.0);
 
     TVector tc(3);
-    tc[0] = 4000.0;
-    tc[1] = 0.0;
+    tc[0] = 500.0; // 1000 3000 6000
+    tc[1] = 240.0;
     tc[2] = 0.0;
     model.set_target(tc);
 
     TVector mc(3);
     mc[0] = 0.0;
-    mc[1] = 0.0;
+    mc[1] = 170.0;
     mc[2] = 0.0;
     model.set_machine(mc);
 
