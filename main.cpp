@@ -30,7 +30,7 @@ int main()
     ball.set_cond(model.get_distance(), model.get_eps(),
                   wd, model.get_wind_speed(),
                   model.get_machine()[1]);
-    ball.calc(1);
+    ball.calc(0);
 
     std::cout << "a_p: " << ball.get_a_p() << '\n';
     std::cout << "psi: " << ball.get_psi() << '\n';
