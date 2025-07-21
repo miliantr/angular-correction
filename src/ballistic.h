@@ -26,7 +26,7 @@ public:
 
     // Начальные условия
     void set_cond(float distanse, float eps_, float U_,
-                  float U_speed, float altitude);
+                  float U_speed, float altitude, float temperature);
 
     // Вычисление баллистических элементов
     void calc(int type);
@@ -45,7 +45,7 @@ private:
     const float R_E = 6356767.0;    // Радиус Земли
     const float g_0 = 9.80665;      // Ускорение силы тяжести
     const float ro_N0 = 1.225;      // Плотность воздуха
-    const float T_N0 = 288.15;      // Температура воздуха
+    //const float T_N0 = 288.15;      // Температура воздуха
     const float R_0 = 287.05287;    // Удельная газовая постоянная
     const float Lambda = -0.0065;   // Градиент температуры
     //const float k = 1.44;           // Показатель адиабаты
@@ -60,6 +60,7 @@ private:
     int     bType;      // Тип снаряда
     float   tab[79][2]; // Мат. таблица сопротивления
 
+    float   T_0;    // Температура окружающей среды
     float   alt;    // Высота начала стрельбы
     float   D;      // Дальность стрельбы
     float   eps;    // Угол места цели

@@ -12,7 +12,7 @@ int main()
     model.set_sensor(ws, wd, 10.0, 300.0, 120000.0, 2.0);
 
     TVector tc(3);
-    tc[0] = 500.0; // 1000 3000 6000
+    tc[0] = 2500.0;
     tc[1] = 240.0;
     tc[2] = 0.0;
     model.set_target(tc);
@@ -29,7 +29,7 @@ int main()
 
     ball.set_cond(model.get_distance(), model.get_eps(),
                   wd, model.get_wind_speed(),
-                  model.get_machine()[1]);
+                  model.get_machine()[1], model.get_temperature());
     ball.calc(0);
 
     std::cout << "a_p: " << ball.get_a_p() << '\n';

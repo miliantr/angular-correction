@@ -29,10 +29,10 @@ void equating(float a[][2], const float b[][2]);
 // Задает начальные условия
 // set_cond(дистанция до цели [м], угол места цели [град],
 //          направление ветра (относительно Корд) [град. (-180.0...+180.0)],
-//          скорость ветра [м/с], высота начала стрельбы [м])
+//          скорость ветра [м/с], высота начала стрельбы [м], темепратура [к])
 //-----------------------------------------------------------------------
 void Ballistic::set_cond(float distanse, float eps_,
-                         float U_, float U_speed, float altitude)
+                         float U_, float U_speed, float altitude, float temperature)
 {
     TVector U_vec(2); // Направление ветра
     U_vec[0] = cos(D2R(U_));
@@ -44,6 +44,7 @@ void Ballistic::set_cond(float distanse, float eps_,
     D = distanse;
     eps = eps_;
     alt = altitude;
+    T_0 = temperature;
 }
 
 //-----------------------------------------------------------------------
@@ -85,7 +86,7 @@ float Ballistic::calc_E(float y, float veol)
 //-----------------------------------------------------------------------
 float Ballistic::calc_H(float y)
 {
-    return pow(1 + Lambda / T_N0 * calc_yG(y), -g_0 / (R_0 * Lambda) - 1);
+    return pow(1 + Lambda / T_0 * calc_yG(y), -g_0 / (R_0 * Lambda) - 1);
 }
 
 //-----------------------------------------------------------------------
@@ -94,7 +95,7 @@ float Ballistic::calc_H(float y)
 //-----------------------------------------------------------------------
 float Ballistic::calc_T(float y)
 {
-    return T_N0 + Lambda * calc_yG(y);
+    return T_0 + Lambda * calc_yG(y);
 }
 
 //-----------------------------------------------------------------------
